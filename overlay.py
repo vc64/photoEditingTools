@@ -27,7 +27,10 @@ elif choice == "2":
 else:
     print("Not a valid option")
 
-# place = input("Where do you want to place the overlay? (Enter as X,Y): ")
+# print("Where do you want to place the overlay?")
+# percentX = input("Enter horizontal position as percent (i.e. 0 is left edge, 100 is right edge): ")
+# percentY = input("Enter vertical position as percent (i.e. 0 is top edge, 100 is bottom edge): ")
+
 
 def merge(files, overlay, X, Y):
     origH, origW = Image.open(files[0]).size
@@ -37,8 +40,11 @@ def merge(files, overlay, X, Y):
         currH, currW = curr.size
 
         overH, overW = overlay.size
+        print([Y, currH, origH, overH])
 
-        curr.paste(overlay, box = (Y * currH / origH - (overH / 2.0), X * currW / origW - (overW / 2.0)), mask = overlay)
+        print((int(Y * currH / origH - (overH / 2)), int(X * currW / origW - (overW / 2))))
+
+        curr.paste(overlay, box = (int(Y * currH / origH - (overH / 2)), int(X * currW / origW - (overW / 2))), mask = overlay)
 
         file_split = file.split(".")
         # print(file)
@@ -74,7 +80,11 @@ def click_event(event, x, y, flags, params):
 
 sample = cv2.imread(files[0])
 
-cv2.imshow("image", sample)
+crop = [overlay.size[0], (sample.shape[0] - overlay.size[0] + 1), overlay.size[1], (sample.shape[1] - overlay.size[1] + 1)]
+
+print(crop)
+
+cv2.imshow("image", sample[crop[2]:crop[3], crop[0]:crop[1]])
 
 params = [files, overlay]
 
